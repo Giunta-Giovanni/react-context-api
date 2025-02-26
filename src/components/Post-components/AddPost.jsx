@@ -1,11 +1,11 @@
 // importiamo la libreria axios per effettuare le chiamate Api
 import axios from "axios";
-
 // importiamo useState
-import { useState } from "react";
+import { useState, useContext } from "react";
+import PostContext from "../../contexts/PostContext";
+
 // importiamo useNavigate
 import { useNavigate } from "react-router-dom";
-
 
 // endpoint
 const endpoint = 'http://localhost:3000/posts'
@@ -21,10 +21,8 @@ const initialFormData = {
 
 export default function AddPost() {
 
-
     // destrutturiamo useNavigate
     const navigate = useNavigate();
-
     // creiamo una variabile di stato che sarà riempita dell'oggetto sopra indicato
     const [formData, setFormData] = useState(initialFormData);
 
@@ -45,6 +43,7 @@ export default function AddPost() {
         }));
     }
 
+    const { setArticols } = useContext(PostContext)
     // Creiamo una funzione unica per gestire l'invio del form.
     const handleSubmitForm = (e) => {
         e.preventDefault()
@@ -59,9 +58,8 @@ export default function AddPost() {
 
                 navigate("/posts");
 
-                // SOLO SE FORM E OUTPUT SONO NELLA STESSA PAGINA
                 // uso la risposta api per prendere gli articoli e gli aggiungo i nuovi dati del form 
-                // setArticols((currentArticols) => [...currentArticols, res.data])
+                setArticols((currentArticols) => [...currentArticols, res.data])
             })
 
             .catch((error) => {
