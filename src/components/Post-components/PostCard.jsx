@@ -1,62 +1,58 @@
+import { Link } from "react-router-dom";
 
-// importiamo Link
-import { Link, } from "react-router-dom";
 
 export default function PostCard(props) {
+    console.log(props);
+    // Destructuring the props object
+    const { articolo, removeArticols } = props;
 
-    {/* singolo articolo*/ } {
-
-        <div key={articolo.id} className="toast d-block">
-
-            {/* contenitore header */}
+    return (
+        // Single article
+        <div className="toast d-block">
+            {/* Header container */}
             <div className="toast-header">
-                {/* link in single post page */}
+                {/* Link to single post page */}
                 <div className="post-zoom">
                     <Link to={`/posts/post/${articolo.id}`}>
                         <i className="fa-solid fa-magnifying-glass"></i>
                     </Link>
                 </div>
-                {/* titolo */}
+                {/* Title */}
                 <strong className="me-auto">{articolo.title}</strong>
 
-                {/* condizione per badge pubblicato*/}
-                {articolo.pubblicato ?
-                    // se è vero badge verde
+                {/* Conditional badge for 'published' */}
+                {articolo.pubblicato ? (
+                    // If true, green badge
                     <span className="badge text-bg-success mx-2 p-2">
                         Pubblicato
                     </span>
-                    // altrimento
-                    :
-                    // se è falso badge rosso
+                ) : (
+                    // If false, red badge
                     <span className="badge text-bg-danger mx-2 p-2">
                         Non pubblicato
-                    </span>}
+                    </span>
+                )}
 
-                {/* button delete */}
+                {/* Delete button */}
                 <button
                     type="button"
                     className="btn-close"
                     data-bs-dismiss="toast"
                     aria-label="Close"
-                    // onclick con funzione inserita in una callback function per prevenire attivazione automatica
                     onClick={() => removeArticols(articolo.id)}
-                >
-
-                </button>
+                ></button>
             </div>
 
-            {/* contenitore corpo */}
+            {/* Body container */}
             <div className="toast-body">
-
-                {/* contenuto */}
+                {/* Content */}
                 <p>{articolo.content}</p>
-                {/* immagine */}
+                {/* Image */}
                 <div className="box-articolo-image">
                     <img src={articolo.image || null} alt={articolo.title} />
                 </div>
 
-
-                {/* categoria */}
+                {/* Categories */}
                 <ul className="category-list">
                     {articolo.tags?.map((tag, index) => (
                         <li key={index}>
@@ -64,8 +60,7 @@ export default function PostCard(props) {
                         </li>
                     ))}
                 </ul>
-
             </div>
         </div>
-    }
+    );
 }

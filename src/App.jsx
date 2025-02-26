@@ -7,30 +7,29 @@ import PostContext from "./contexts/PostContext";
 // importiamo hookx e libreria per gestire i listato
 import { useState, useEffect } from "react";
 import axios from "axios";
-const endpoint = 'http://localhost:3000/posts';
 
 // importiamo i layout
-import DefaultLayout from "./components/DefaultLayout";
+import DefaultLayout from "./layout/DefaultLayout";
 
 // importiamo le pagine
-import HomePage from "./route/HomePage";
-import AboutPage from "./route/AboutPage";
-import PostsPage from "./route/PostsPage";
-import AddPostPage from "./route/AddPostPage";
-import SinglePostPage from "./route/SinglePostPage";
-import NotFoundPage from "./route/NotFoundPage";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import PostsPage from "./pages/PostsPage";
+import AddPostPage from "./pages/AddPostPage";
+import SinglePostPage from "./pages/SinglePostPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 
 export default function App() {
 
   // creiamo una variabile di stato che conterrà il nostro array di oggetti
   const [articols, setArticols] = useState([])
-  console.table(articols)
+  console.log(articols)
 
   // Funzione di richiesta Api
   function fetchArticols() {
     // richiesta di chiamata a localhost 3000
-    axios.get(endpoint)
+    axios.get('http://localhost:3000/posts')
       // prendi i dati di risposta e inseriscili a res.data
       .then((res) =>
         setArticols(res.data),
@@ -39,19 +38,19 @@ export default function App() {
         console.error("Errore durante il recupero dei dati:", error);
       });
   }
+  // richiamo la funzione di richiesta dati al caricamento del componente
+  // fetchPizzas();
+  // Solo al primo rendering
+  useEffect(fetchArticols, []);
 
-  // chiamata api effettuata all'avvio del server
-  useEffect(() => {
-    console.log("Sto recuperando gli articoli...");
-    fetchArticols();
-  }, []);
+
+
 
   return (
-    <PostContext.Provider value={{ articols }}>
+    <PostContext.Provider value={{ articols, setArticols }}>
       <BrowserRouter>
         <Routes>
           <Route element={<DefaultLayout />}>
-
             <Route index element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/posts">
@@ -59,12 +58,10 @@ export default function App() {
               <Route path="addpost" element={<AddPostPage />} />
               <Route path="post/:id" element={<SinglePostPage />} />
             </Route>
-            <Route path="*" element={<NotFoundPage />} />
-
           </Route>
-
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter >
-    </PostContext.Provider>
+    </PostContext.Provider >
   );
 }

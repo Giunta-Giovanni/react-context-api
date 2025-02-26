@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import PostContext from "../../contexts/PostContext";
+
 // importiamo i Componenti
 import PostCard from "./PostCard";
 
@@ -8,14 +11,14 @@ import axios from "axios";
 const endpoint = 'http://localhost:3000/posts';
 
 export default function PostList() {
+    // salviamo il context contenente articols
+    const { articols, setArticols } = useContext(PostContext);
 
     // funzione di rimozione dei post
     function removeArticols(id) {
 
         // filter sull'array
-        const updateArticols = articols.filter(articol => {
-            return articol.id !== id
-        })
+        const updateArticols = articols.filter(articol => articol.id !== id)
 
         // chiamata ad api sulla rotta di delete con parametro dinamico id
         axios.delete(`${endpoint}/${id}`)
@@ -49,7 +52,15 @@ export default function PostList() {
                     <div className="box-articoli">
 
                         {/* effettuiamo map su articols che è il nostro array dinamico */}
-                        {articols.map(articolo => (<PostCard articolo={articolo} />))}
+                        {articols.map(articolo =>
+                        (<PostCard
+                            // chiave
+                            key={articolo.id}
+                            // oggetto
+                            articolo={articolo}
+                            // funzione di rimozione articoli
+                            removeArticols={removeArticols}
+                        />))}
                     </div>
                 }
 
